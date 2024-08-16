@@ -32,8 +32,14 @@ impl BinTree {
 
     pub fn print_tree(&self) {
         let mut pre_container: Vec<i32> = Vec::new();
+        let mut in_container: Vec<i32> = Vec::new();
+        let mut post_container: Vec<i32> = Vec::new();
         BinTree::print_pre(&self.head, &mut pre_container);
         println!("Pre : {:?}", pre_container);
+        BinTree::print_in(&self.head, &mut in_container);
+        println!("in : {:?}", in_container);
+        BinTree::print_post(&self.head, &mut post_container);
+        println!("post : {:?}", post_container);
     }
     fn print_pre(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
         match node {
@@ -41,6 +47,26 @@ impl BinTree {
                 container.push(n.elem);
                 BinTree::print_pre(&n.left, container);
                 BinTree::print_pre(&n.right, container);
+            }
+            _ => (),
+        }
+    }
+    fn print_in(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
+        match node {
+            Some(n) => {
+                BinTree::print_in(&n.left, container);
+                container.push(n.elem);
+                BinTree::print_in(&n.right, container);
+            }
+            _ => (),
+        }
+    }
+    fn print_post(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
+        match node {
+            Some(n) => {
+                BinTree::print_post(&n.left, container);
+                BinTree::print_post(&n.right, container);
+                container.push(n.elem);
             }
             _ => (),
         }
