@@ -16,4 +16,4 @@ impl Node {
         Box::new(Node::new(num))
     }
 }
-pub mod BinTree;
+pub mod bin_tree;

@@ -1,11 +1,15 @@
 mod trees;
-use trees::BinTree::BinTree;
+use trees::bin_tree::BinTree;
 fn main() {
     println!("Hello, world!");
-    let mut tree = BinTree::new();
-    tree.insert_elem(32);
-    tree.insert_elem(1);
-    tree.insert_elem(-1);
-    tree.insert_elem(44);
-    tree.print_tree();
+    let mut Tree = BinTree::new();
+    Tree.insert_elem(7);
+    Tree.insert_elem(3);
+    Tree.insert_elem(5);
+    Tree.insert_elem(20);
+    Tree.insert_elem(31);
+    Tree.print_tree();
+    Tree.remove_node(5);
+
+    Tree.print_tree();
 }
