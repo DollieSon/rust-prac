@@ -1,3 +1,5 @@
+use std::mem;
+
 use crate::trees::Node;
 pub struct BinTree {
     head: Option<Box<Node>>,
@@ -27,92 +29,41 @@ impl BinTree {
         *curr_node = Some(node);
         self.node_count += 1;
     }
-    fn find_mid_node(head: &Box<Node>, dir: char) -> &Option<Box<Node>> {
-        match dir.to_ascii_lowercase() {
-            'l' => {
-                let mut curr_node = &head.left;
-                while let Some(ref unwrapped) = curr_node {
-                    match unwrapped.left {
-                        Some(_) => {
-                            curr_node = &unwrapped.left;
-                        }
-                        _ => {
-                            println!("returning Node: {}", unwrapped.elem);
-                            return &curr_node;
-                        }
-                    }
-                }
-                &curr_node
-            }
-            'r' => {
-                let mut curr_node = &head.right;
-                while let Some(ref unwrapped) = curr_node {
-                    match unwrapped.right {
-                        Some(_) => {
-                            curr_node = &unwrapped.right;
-                        }
-                        _ => {
-                            println!("returning Node: {}", unwrapped.elem);
-                            return &curr_node;
-                        }
-                    }
-                }
-                &curr_node
-            }
-            _ => {
-                panic!("Error Direction");
-            }
-        }
-    }
-    pub fn remove_node(&mut self, elem: i32) {
-        let mut curr_node = &mut self.head;
-
-        while let Some(ref mut curr) = curr_node {
-            if curr.elem > elem {
-                // Use a block to limit the scope of the mutable borrow
-                curr_node = &mut curr.left;
-            } else if curr.elem < elem {
-                curr_node = &mut curr.right;
-            } else {
-                println!("element found {}", curr.elem);
-                let mut found: &Option<Box<Node>>;
-                match *(curr.as_mut()) {
-                    Node {
-                        elem: _,
-                        left: Some(ref head),
-                        right: _,
-                    } => {
-                        //L inf-R
-                        found = BinTree::find_mid_node(head, 'l');
-                    }
-                    Node {
-                        elem: _,
-                        left: None,
-                        right: Some(ref head),
-                    } => {
-                        // R inf-L
-                        found = BinTree::find_mid_node(head, 'r');
-                    }
-                    _ => {
-                        // just remove and return
-                        *curr_node = None;
-                        return;
-                    }
-                }
-                match found {
-                    Some(node) => {
-                        println!("Node : {}", node.elem);
-                    }
-                    _ => {}
-                }
-                return;
-            }
-        }
-        println!("element was not found");
-    }
-
     pub fn insert_elem(&mut self, elem: i32) {
         self.insert_node(Node::new_box(elem));
+    }
+    pub fn invert_tree(&mut self) {
+        self.head = BinTree::invert_node(&mut self.head);
+    }
+    fn invert_node(node: &mut Option<Box<Node>>) -> Option<Box<Node>> {
+        match node {
+            Some(unwrapped) => {
+                let temp_left = BinTree::invert_node(&mut unwrapped.left);
+                unwrapped.left = BinTree::invert_node(&mut unwrapped.right);
+                unwrapped.right = temp_left;
+                return node.take();
+            }
+            _ => None,
+        }
+    }
+    //Unfinished - cannot actually remove
+    pub fn remove_node(&mut self, elem: i32) {
+        let mut prev_node: Option<&mut Box<Node>> = None;
+        let mut curr_node = &mut self.head;
+
+        //find elem
+        while let Some(ref mut unwrap) = curr_node {
+            if elem < unwrap.elem {
+                prev_node = Some(unwrap);
+                curr_node = &mut unwrap.left;
+            } else if elem > unwrap.elem {
+                prev_node = Some(unwrap);
+                curr_node = &mut unwrap.right;
+            } else {
+                // found
+                break;
+            }
+        }
     }
 
     pub fn print_tree(&self) {
