@@ -48,20 +48,39 @@ impl BinTree {
     }
     //Unfinished - cannot actually remove
     pub fn remove_node(&mut self, elem: i32) {
-        let mut prev_node: Option<&mut Box<Node>> = None;
-        let mut curr_node = &mut self.head;
-
-        //find elem
-        while let Some(ref mut unwrap) = curr_node {
-            if elem < unwrap.elem {
-                prev_node = Some(unwrap);
-                curr_node = &mut unwrap.left;
-            } else if elem > unwrap.elem {
-                prev_node = Some(unwrap);
-                curr_node = &mut unwrap.right;
-            } else {
-                // found
-                break;
+        if let Some(root) = self.head.take() {
+            self.head = BinTree::rem_node(root, elem);
+        }
+    }
+    //recurssive remove
+    fn rem_node(mut curr: Box<Node>, elem: i32) -> Option<Box<Node>> {
+        if elem < curr.elem {
+            if let Some(left) = curr.left.take() {
+                curr.left = BinTree::rem_node(left, elem);
+            }
+            return Some(curr);
+        }
+        if elem > curr.elem {
+            if let Some(right) = curr.right.take() {
+                curr.right = BinTree::rem_node(right, elem);
+            }
+            return Some(curr);
+        }
+        // I dont understand this part
+        // magic happens here
+        match (curr.left.take(), curr.right.take()) {
+            (None, None) => None,
+            (None, Some(right)) => Some(right),
+            (Some(left), None) => Some(left),
+            (Some(mut left), Some(right)) => {
+                if let Some(mut rm) = left.right_most() {
+                    rm.left = Some(left);
+                    rm.right = Some(right);
+                    Some(rm)
+                } else {
+                    left.right = Some(right);
+                    Some(left)
+                }
             }
         }
     }

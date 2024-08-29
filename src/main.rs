@@ -9,7 +9,7 @@ fn main() {
     Tree.insert_elem(20);
     Tree.insert_elem(31);
     Tree.print_tree();
-    Tree.remove_node(5);
+    Tree.remove_node(7);
 
     Tree.print_tree();
 }
