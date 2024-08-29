@@ -19,14 +19,14 @@ impl BinTree {
         let mut curr_node = &mut self.head;
         while let Some(ref mut unwrapped) = curr_node {
             if node.elem < unwrapped.elem {
-                println!("going left of {}", unwrapped.elem);
+                // println!("going left of {}", unwrapped.elem);
                 curr_node = &mut unwrapped.left;
             } else {
-                println!("going right of {}", unwrapped.elem);
+                // println!("going right of {}", unwrapped.elem);
                 curr_node = &mut unwrapped.right;
             }
         }
-        println!("inserting {}", node.elem);
+        // println!("inserting {}", node.elem);
         *curr_node = Some(node);
         self.node_count += 1;
     }
@@ -131,6 +131,9 @@ impl BinTree {
 // I know this is repetitive
 // I KNOW....
 impl Tree for BinTree {
+    fn new() -> Self {
+        BinTree::new()
+    }
     fn add_elem(&mut self, elem: i32) {
         self.insert_elem(elem);
     }
@@ -141,7 +144,7 @@ impl Tree for BinTree {
         return 0; // TODO
     }
     fn get_pre(&self, container: &mut Vec<i32>) {
-        BinTree::print_in(&self.head, container);
+        BinTree::print_pre(&self.head, container);
     }
     fn get_post(&self, container: &mut Vec<i32>) {
         BinTree::print_post(&self.head, container);

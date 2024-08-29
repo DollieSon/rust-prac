@@ -1,4 +1,5 @@
 pub trait Tree {
+    fn new() -> Self;
     fn add_elem(&mut self, elem: i32);
     fn remove_elem(&mut self, elem: i32);
     fn get_depth(&self) -> i32;
