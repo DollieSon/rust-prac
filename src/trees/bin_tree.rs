@@ -1,11 +1,12 @@
-use std::mem;
-
+use crate::trees::tree::Tree;
 use crate::trees::Node;
+use std::mem;
 pub struct BinTree {
     head: Option<Box<Node>>,
     node_count: i32,
 }
-
+// I HATE TESTS NO TESTS
+// THIS WORKS TRUST GOD
 impl BinTree {
     pub fn new() -> BinTree {
         BinTree {
@@ -84,7 +85,6 @@ impl BinTree {
             }
         }
     }
-
     pub fn print_tree(&self) {
         let mut pre_container: Vec<i32> = Vec::new();
         let mut in_container: Vec<i32> = Vec::new();
@@ -96,7 +96,7 @@ impl BinTree {
         BinTree::print_post(&self.head, &mut post_container);
         println!("post : {:?}", post_container);
     }
-    fn print_pre(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
+    pub fn print_pre(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
         match node {
             Some(n) => {
                 container.push(n.elem);
@@ -106,7 +106,7 @@ impl BinTree {
             _ => (),
         }
     }
-    fn print_in(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
+    pub fn print_in(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
         match node {
             Some(n) => {
                 BinTree::print_in(&n.left, container);
@@ -116,7 +116,7 @@ impl BinTree {
             _ => (),
         }
     }
-    fn print_post(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
+    pub fn print_post(node: &Option<Box<Node>>, container: &mut Vec<i32>) {
         match node {
             Some(n) => {
                 BinTree::print_post(&n.left, container);
@@ -125,5 +125,31 @@ impl BinTree {
             }
             _ => (),
         }
+    }
+}
+
+// I know this is repetitive
+// I KNOW....
+impl Tree for BinTree {
+    fn add_elem(&mut self, elem: i32) {
+        self.insert_elem(elem);
+    }
+    fn remove_elem(&mut self, elem: i32) {
+        self.remove_node(elem);
+    }
+    fn get_depth(&self) -> i32 {
+        return 0; // TODO
+    }
+    fn get_pre(&self, container: &mut Vec<i32>) {
+        BinTree::print_in(&self.head, container);
+    }
+    fn get_post(&self, container: &mut Vec<i32>) {
+        BinTree::print_post(&self.head, container);
+    }
+    fn get_in(&self, container: &mut Vec<i32>) {
+        BinTree::print_in(&self.head, container);
+    }
+    fn print(&self) {
+        self.print_tree();
     }
 }
